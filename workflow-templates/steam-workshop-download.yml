@@ -7,42 +7,6 @@ on:
 
 jobs:
   steam-workshop-download:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Steam Workshop item updates
-        run: |
-          curl -X POST https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/ \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "itemcount=1" \
-            -d "publishedfileids[0]=${{ inputs.workshop-id }}" \
-            | jq '.response.publishedfiledetails[0].time_updated'
-      - name: Install SteamCMD
-        uses: andriivitiv/setup-steamcmd@v1.3.0
-      - name: Install fastgmad
-        uses: gmod-hz/setup-fastgmad@main
-      - name: Download Steam Workshop item
-        id: download
-        run: |
-          steamcmd +login anonymous +workshop_download_item 4000 ${{ inputs.workshop-id }} +quit
-          GMA=$(find ~/Steam/steamapps/workshop/content/4000/${{ inputs.workshop-id }} -name "*.gma" | head -n 1)
-          echo "GMA=$GMA" >> $GITHUB_OUTPUT
-      - name: Extract GMA
-        run: |
-          fastgmad extract -file ${{ steps.download.outputs.GMA }} -out ${{ runner.temp }}/addon
-      - name: Checkout repository
-        uses: actions/checkout@v7.0.0
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: Commit and push
-        run: |
-          cp -r ${{ runner.temp }}/addon/* ./
-          set +e
-            git diff --quet; DIFF=$?
-          set -e
-          if [ DIFF -eq 1 ]; then
-            git add -A
-            git commit -m "Updated from Steam Workshop"
-            git push origin main
-          fi
+    uses: gmod-hz/.github/.github/workflows/steam-workshop-download.yml
+    with:
+      workshop-id: ${{ vars.WORKSHOP_ITEM_ID }}
