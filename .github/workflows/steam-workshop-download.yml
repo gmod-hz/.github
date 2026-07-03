@@ -41,7 +41,7 @@ jobs:
         run: |
           cp -r ${{ runner.temp }}/addon/* ./
           set +e
-            git diff --quet; DIFF=$?
+            git diff --quiet; DIFF=$?
           set -e
           if [ DIFF -eq 1 ]; then
             git add -A
