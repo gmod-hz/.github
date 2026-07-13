@@ -38,10 +38,14 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Commit and push
-        continue-on-error: true
         run: |
           cp -r ${{ runner.temp }}/addon/* ./
-          git diff --quiet; DIFF=$?
+          
+          # Wrap for making errors non-halting
+          #  Using `continue-on-error: true` not working properly
+          set +e
+            git diff --quiet; DIFF=$?
+          set -e
           if [ $DIFF -eq 1 ]; then
             git add -A
             git commit -m "Updated from Steam Workshop"
