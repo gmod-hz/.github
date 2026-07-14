@@ -39,7 +39,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Commit and push
         run: |
-          sudo cp -r ${{ runner.temp }}/addon/* ./
+          sudo cp -r ${{ runner.temp }}/addon/. ./
           
           # Wrap for making errors non-halting
           #  Using `continue-on-error: true` not working properly
