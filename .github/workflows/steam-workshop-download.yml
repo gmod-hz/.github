@@ -46,6 +46,7 @@ jobs:
           set +e
             git diff --quiet; DIFF=$?
           set -e
+          echo $DIFF
           if [ $DIFF -eq 1 ]; then
             git add -A
             git commit -m "Updated from Steam Workshop"
