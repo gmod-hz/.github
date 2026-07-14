@@ -39,7 +39,8 @@ jobs:
       - name: Extract BIN
         if: steps.download.outputs.PATH_ADDON_BIN
         run: |
-          7z x ${{ steps.download.outputs.PATH_ADDON_BIN }} -so > addon.gma
+          lzma -dc ${{ steps.download.outputs.PATH_ADDON_BIN }} > addon.gma
+          # 7z x ${{ steps.download.outputs.PATH_ADDON_BIN }} -so > addon.gma
           fastgmad extract -file addon.gma -out ${{ runner.temp }}/addon
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
