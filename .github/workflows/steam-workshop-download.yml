@@ -28,7 +28,7 @@ jobs:
         id: download
         run: |
           steamcmd +login anonymous +workshop_download_item 4000 ${{ inputs.workshop-id }} +quit
-          GMA=$(find ~/Steam/steamapps/workshop/content/4000/${{ inputs.workshop-id }} -name "*.gma" | head -n 1)
+          GMA=$(find ~/Steam/steamapps/workshop/content/4000/${{ inputs.workshop-id }} \( -name "*.gma" -o -name "*.bin" \) | head -n 1)
           echo "GMA=$GMA" >> $GITHUB_OUTPUT
       - name: Extract GMA
         run: |
