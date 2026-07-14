@@ -41,6 +41,7 @@ jobs:
         continue-on-error: true
         run: |
           7z x ${{ steps.download.outputs.PATH_ADDON_BIN }} -tlzma -so > addon.gma
+          tree .
           fastgmad extract -file addon.gma -out ${{ runner.temp }}/addon
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
