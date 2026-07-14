@@ -38,10 +38,10 @@ jobs:
           fastgmad extract -file ${{ steps.download.outputs.PATH_ADDON_GMA }} -out ${{ runner.temp }}/addon
       - name: Extract BIN
         if: steps.download.outputs.PATH_ADDON_BIN
-        continue-on-error: true
         run: |
-          7z x ${{ steps.download.outputs.PATH_ADDON_BIN }} -tlzma -so 2>/dev/null > addon.gma
-          tree .
+          set +e
+            7z x ${{ steps.download.outputs.PATH_ADDON_BIN }} -tlzma -so > addon.gma
+          set -e
           fastgmad extract -file addon.gma -out ${{ runner.temp }}/addon
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
