@@ -8,8 +8,10 @@ on:
         type: string
 
 jobs:
-  triage:
+  steam-workshop-download:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check Steam Workshop item updates
         run: |
@@ -39,7 +41,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Commit and push
         run: |
-          cp -va ${{ runner.temp }}/addon/. ./
+          cp -a ${{ runner.temp }}/addon/. ./
           git add -N .
           
           # Wrap for making errors non-halting
