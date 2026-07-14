@@ -39,6 +39,7 @@ jobs:
       - name: Extract BIN
         if: steps.download.outputs.PATH_ADDON_BIN
         run: |
+          # Suppress error about data after the payload
           set +e
             7z x ${{ steps.download.outputs.PATH_ADDON_BIN }} -tlzma -so > addon.gma
           set -e
@@ -55,7 +56,6 @@ jobs:
           git add -N .
           
           # Wrap for making errors non-halting
-          #  Using `continue-on-error: true` not working properly
           set +e
             git diff --quiet; DIFF=$?
           set -e
