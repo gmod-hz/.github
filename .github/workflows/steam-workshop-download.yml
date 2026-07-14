@@ -28,11 +28,19 @@ jobs:
         id: download
         run: |
           steamcmd +login anonymous +workshop_download_item 4000 ${{ inputs.workshop-id }} +quit
-          GMA=$(find ~/Steam/steamapps/workshop/content/4000/${{ inputs.workshop-id }} \( -name "*.gma" -o -name "*.bin" \) | head -n 1)
-          echo "GMA=$GMA" >> $GITHUB_OUTPUT
+          PATH_ADDON_GMA=$(find ~/Steam/steamapps/workshop/content/4000/${{ inputs.workshop-id }} -name "*.gma" | head -n 1)
+          PATH_ADDON_BIN=$(find ~/Steam/steamapps/workshop/content/4000/${{ inputs.workshop-id }} -name "*.bin" | head -n 1)
+          echo "PATH_ADDON_GMA=$PATH_ADDON_GMA" >> $GITHUB_OUTPUT
+          echo "PATH_ADDON_BIN=$PATH_ADDON_BIN" >> $GITHUB_OUTPUT
       - name: Extract GMA
+        if: steps.download.outputs.PATH_ADDON_GMA
         run: |
-          fastgmad extract -file ${{ steps.download.outputs.GMA }} -out ${{ runner.temp }}/addon
+          fastgmad extract -file ${{ steps.download.outputs.PATH_ADDON_GMA }} -out ${{ runner.temp }}/addon
+      - name: Extract BIN
+        if: steps.download.outputs.PATH_ADDON_BIN
+        run: |
+          unzip -p $${{ steps.download.outputs.PATH_ADDON_BIN }} > addon.gma
+          fastgmad extract -file addon.gma -out ${{ runner.temp }}/addon
       - name: Checkout repository
         uses: actions/checkout@v7.0.0
       - name: Configure Git
